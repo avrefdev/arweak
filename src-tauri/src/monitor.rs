@@ -119,10 +119,10 @@ fn presentmon_path() -> std::path::PathBuf {
     p
 }
 
-fn start_presentmon(exe: &str, live: Shared) -> Option<Child> {
+fn start_presentmon(pid: u32, live: Shared) -> Option<Child> {
     let mut child = Command::new(presentmon_path())
         .args([
-            "--process_name", exe, "--output_stdout", "--no_console_stats", "--v1_metrics",
+            "--process_id", &pid.to_string(), "--output_stdout", "--no_console_stats", "--v1_metrics",
             "--stop_existing_session", "--session_name", "Arweak", "--terminate_on_proc_exit",
         ])
         .stdout(Stdio::piped())
@@ -249,7 +249,7 @@ pub fn spawn(live: Shared, options: impl Fn() -> Options + Send + 'static, on_ga
                     let _ = child.kill();
                 }
                 if let Some(gm) = &game {
-                    pm = start_presentmon(&gm.exe, live.clone());
+                    pm = start_presentmon(gm.pid, live.clone());
                 }
                 on_game(game.as_ref(), ended);
                 boosted_pid = 0;
