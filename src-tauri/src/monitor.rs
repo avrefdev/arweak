@@ -136,7 +136,7 @@ fn start_presentmon(pid: u32, live: Shared) -> Option<Child> {
         for line in BufReader::new(out).lines().map_while(Result::ok) {
             let cells: Vec<&str> = line.split(',').collect();
             match col {
-                None => col = cells.iter().position(|c| c.trim() == "MsBetweenPresents"),
+                None => col = cells.iter().position(|c| matches!(c.trim().to_lowercase().as_str(), "msbetweenpresents" | "frametime")),
                 Some(i) => {
                     if let Some(v) = cells.get(i).and_then(|v| v.trim().parse::<f32>().ok()) {
                         if v > 0.0 && v < 1000.0 {
