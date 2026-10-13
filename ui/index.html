@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <title>Arweak</title>
+  <link rel="stylesheet" href="icons.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="titlebar" data-tauri-drag-region>
+    <div class="brand" data-tauri-drag-region>
+      <img src="img/logo.svg" alt="" data-tauri-drag-region />
+      <span class="d" data-tauri-drag-region>ARWEAK</span>
+    </div>
+    <div class="win">
+      <span class="pill ac" id="hdr">HAZIR</span>
+      <button id="win-min" aria-label="Küçült"><i class="ti ti-minus"></i></button>
+      <button id="win-close" aria-label="Kapat"><i class="ti ti-x"></i></button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav id="nav">
+      <div class="nav-ind" id="nav-ind"></div>
+      <button class="nv a" data-p="home"><i class="ti ti-bolt"></i>Boost</button>
+      <button class="nv" data-p="games"><i class="ti ti-device-gamepad-2"></i>Oyunlar</button>
+      <button class="nv" data-p="tweaks"><i class="ti ti-adjustments-horizontal"></i>Optimizasyonlar</button>
+      <button class="nv" data-p="perf"><i class="ti ti-chart-line"></i>Performans</button>
+      <button class="nv" data-p="system"><i class="ti ti-cpu"></i>Sistem</button>
+      <div class="spacer"></div>
+      <div class="cd score">
+        <div class="lb">Sistem skoru</div>
+        <div class="score-row"><span class="d" id="score">—</span><span class="muted">/ 100</span></div>
+        <div class="meter"><b id="score-bar"></b></div>
+      </div>
+      <button class="nv" data-p="settings"><i class="ti ti-settings"></i>Ayarlar</button>
+    </nav>
+
+    <main>
+      <section class="page active" id="page-home">
+        <div class="home">
+          <div class="cd boost-card st-i" style="--i:0">
+            <button class="boost" id="boost" aria-label="Boost">
+              <svg class="ring" viewBox="0 0 200 200"><circle cx="100" cy="100" r="92" class="track" /><circle cx="100" cy="100" r="92" class="prog" id="boost-prog" /></svg>
+              <span class="core"><i class="ti ti-bolt"></i><span class="d" id="boost-label">BOOST</span></span>
+            </button>
+            <div class="boost-text">
+              <div class="d" id="boost-title">Optimize edilmedi</div>
+              <div class="muted" id="boost-sub"></div>
+            </div>
+          </div>
+          <div class="home-right">
+            <div class="ban hero st-i" style="--i:1" id="hero">
+              <div class="ban-img" id="hero-img"></div>
+              <div class="hero-in">
+                <span class="pill glass" id="hero-tag">SEÇİLİ PROFİL</span>
+                <div class="hero-row">
+                  <div class="d hero-name" id="hero-name">—</div>
+                  <div class="hero-fps"><div class="d" id="hero-fps">—</div><div class="cap">FPS</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="grid3">
+              <div class="cd ring-card st-i" style="--i:2" data-ring="cpu"></div>
+              <div class="cd ring-card st-i" style="--i:3" data-ring="gpu"></div>
+              <div class="cd ring-card st-i" style="--i:4" data-ring="ram"></div>
+            </div>
+            <div class="cd chart-card st-i" style="--i:5">
+              <div class="lb"><span>Kare süresi</span><span id="home-low"></span></div>
+              <svg class="chart" viewBox="0 0 100 60" preserveAspectRatio="none" id="home-chart"></svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="page-games">
+        <h1 class="d">Oyunlar <span class="pill ac" id="games-count"></span></h1>
+        <div class="games" id="games"></div>
+      </section>
+
+      <section class="page" id="page-tweaks">
+        <h1 class="d">Optimizasyonlar
+          <span class="row-gap">
+            <button class="btn" id="tw-off">Hepsini kapat</button>
+            <button class="btn ac" id="tw-rec"><i class="ti ti-sparkles"></i>Önerilenler</button>
+          </span>
+        </h1>
+        <div class="grid3 tweak-cols" id="tweaks"></div>
+        <div class="cd sum st-i" style="--i:4">
+          <span class="muted">Seçili optimizasyonlar</span>
+          <span class="d big-ac" id="tw-count">0 / 12</span>
+        </div>
+        <div class="cd note st-i" style="--i:5" id="reboot-note" hidden>
+          <i class="ti ti-rotate-2"></i><span>Bazı değişiklikler bilgisayar yeniden başlatılınca etkinleşir</span>
+        </div>
+      </section>
+
+      <section class="page" id="page-perf">
+        <h1 class="d">Performans <span class="pill" id="perf-game">Oyun bekleniyor</span></h1>
+        <div class="grid4">
+          <div class="cd st-i" style="--i:0"><div class="lb">Ortalama FPS</div><span class="d metric" id="p-fps">—</span></div>
+          <div class="cd st-i" style="--i:1"><div class="lb">%1 low</div><span class="d metric" id="p-low">—</span></div>
+          <div class="cd st-i" style="--i:2"><div class="lb">Kare süresi</div><span class="d metric" id="p-ft">—</span> <span class="muted">ms</span></div>
+          <div class="cd st-i" style="--i:3"><div class="lb">Takılma</div><span class="d metric" id="p-st">—</span></div>
+          <div class="cd span4 st-i" style="--i:4">
+            <div class="lb"><span>Kare süresi geçmişi</span><span>Son 60 sn</span></div>
+            <svg class="chart" viewBox="0 0 100 60" preserveAspectRatio="none" id="perf-chart" style="height:180px"></svg>
+          </div>
+          <div class="cd span4 compare st-i" style="--i:5">
+            <div><div class="lb">Boost kapalı</div><span class="d cmp" id="p-before">—</span> <span class="muted">FPS</span></div>
+            <i class="ti ti-arrow-big-right ac"></i>
+            <div><div class="lb">Boost açık</div><span class="d cmp ac" id="p-after">—</span> <span class="muted">FPS</span></div>
+            <div class="spacer"></div>
+            <span class="d gain" id="p-gain"></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="page-system">
+        <h1 class="d">Sistem <button class="btn" id="sys-refresh"><i class="ti ti-refresh"></i>Yeniden tara</button></h1>
+        <div class="grid3">
+          <div class="col st-i" style="--i:0"><p class="cat"><i class="ti ti-cpu"></i>Donanım</p><div class="stack" id="sys-hw"></div></div>
+          <div class="col st-i" style="--i:1"><p class="cat"><i class="ti ti-database"></i>Bellek</p><div class="stack" id="sys-mem"></div></div>
+          <div class="col st-i" style="--i:2"><p class="cat"><i class="ti ti-device-desktop"></i>Ekran</p><div class="stack" id="sys-disp"></div></div>
+        </div>
+        <div class="cd warn-card st-i" style="--i:3" id="sys-warn" hidden>
+          <i class="ti ti-alert-triangle"></i><span id="sys-warn-text"></span>
+        </div>
+        <div class="bx clean st-i" style="--i:4">
+          <span>RAM önbelleği</span>
+          <span class="row-gap"><span class="muted" id="clean-result"></span><button class="btn ac" id="clean"><i class="ti ti-eraser"></i>Temizle</button></span>
+        </div>
+      </section>
+
+      <section class="page" id="page-settings">
+        <h1 class="d">Ayarlar</h1>
+        <div class="grid2">
+          <label class="bx st-i" style="--i:0">Windows ile başlat<input type="checkbox" class="tg" data-set="start_with_windows" /></label>
+          <label class="bx st-i" style="--i:1">Oyun açılınca otomatik boost<input type="checkbox" class="tg" data-set="auto_boost" /></label>
+          <label class="bx st-i" style="--i:2">Kapatınca tepsiye küçült<input type="checkbox" class="tg" data-set="close_to_tray" /></label>
+          <div class="bx st-i" style="--i:3">Yedek noktası oluştur<button class="link ac" id="restore">Oluştur</button></div>
+          <div class="bx st-i" style="--i:4">Tüm değişiklikleri geri al<button class="link danger" id="revert">Geri al</button></div>
+        </div>
+        <div class="version">v1.0.0</div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

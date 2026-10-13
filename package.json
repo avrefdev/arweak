@@ -1,0 +1,19 @@
+{
+  "name": "arweak",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Oyunlar için Windows performans aracı",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "assets": "node scripts/assets.mjs",
+    "icons": "node scripts/make-icons.mjs && tauri icon src-tauri/icons/app.png",
+    "dev": "tauri dev",
+    "build": "tauri build && node scripts/collect-release.mjs"
+  },
+  "devDependencies": {
+    "@fontsource-variable/inter": "^5.1.0",
+    "@fontsource/chakra-petch": "^5.1.0",
+    "@tabler/icons-webfont": "^3.19.0",
+    "@tauri-apps/cli": "^2.1.0"
+  }
+}
