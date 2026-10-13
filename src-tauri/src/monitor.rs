@@ -126,17 +126,28 @@ fn start_presentmon(pid: u32, live: Shared) -> Option<Child> {
             "--stop_existing_session", "--session_name", "Arweak", "--terminate_on_proc_exit",
         ])
         .stdout(Stdio::piped())
-        .stderr(Stdio::null())
+        .stderr(
+            std::fs::File::create(util::data_dir().join("presentmon.log"))
+                .map(Stdio::from)
+                .unwrap_or_else(|_| Stdio::null()),
+        )
         .creation_flags(util::CREATE_NO_WINDOW)
         .spawn()
         .ok()?;
     let out = child.stdout.take()?;
     std::thread::spawn(move || {
         let mut col = None;
+        let mut header = String::new();
         for line in BufReader::new(out).lines().map_while(Result::ok) {
             let cells: Vec<&str> = line.split(',').collect();
             match col {
-                None => col = cells.iter().position(|c| matches!(c.trim().to_lowercase().as_str(), "msbetweenpresents" | "frametime")),
+                None => {
+                    col = cells.iter().position(|c| matches!(c.trim().to_lowercase().as_str(), "msbetweenpresents" | "frametime"));
+                    if header.is_empty() {
+                        header = line.clone();
+                        let _ = std::fs::write(util::data_dir().join("presentmon-header.txt"), &header);
+                    }
+                }
                 Some(i) => {
                     if let Some(v) = cells.get(i).and_then(|v| v.trim().parse::<f32>().ok()) {
                         if v > 0.0 && v < 1000.0 {
@@ -153,6 +164,10 @@ fn start_presentmon(pid: u32, live: Shared) -> Option<Child> {
         }
     });
     Some(child)
+}
+
+pub fn kill_all() {
+    let _ = util::run("taskkill.exe", "/F /IM PresentMon.exe");
 }
 
 pub fn fps_now(l: &Live) -> Option<u32> {
@@ -194,6 +209,8 @@ pub fn spawn(live: Shared, options: impl Fn() -> Options + Send + 'static, on_ga
         let mut boosted_pid = 0u32;
         let mut last_purge = Instant::now() - Duration::from_secs(600);
         let mut tick = 0u64;
+        let mut pm_started = Instant::now();
+        kill_all();
         loop {
             std::thread::sleep(Duration::from_secs(1));
             tick += 1;
@@ -250,9 +267,18 @@ pub fn spawn(live: Shared, options: impl Fn() -> Options + Send + 'static, on_ga
                 }
                 if let Some(gm) = &game {
                     pm = start_presentmon(gm.pid, live.clone());
+                    pm_started = Instant::now();
                 }
                 on_game(game.as_ref(), ended);
                 boosted_pid = 0;
+            }
+
+            if let Some(gm) = &game {
+                let dead = pm.as_mut().map(|c| c.try_wait().ok().flatten().is_some()).unwrap_or(true);
+                if dead && pm_started.elapsed() > Duration::from_secs(5) {
+                    pm = start_presentmon(gm.pid, live.clone());
+                    pm_started = Instant::now();
+                }
             }
 
             match (&game, opt.boost) {

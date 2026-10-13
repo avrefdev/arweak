@@ -504,6 +504,11 @@ fn main() {
             revert_everything,
             close_window
         ])
-        .run(tauri::generate_context!())
-        .expect("Arweak");
+        .build(tauri::generate_context!())
+        .expect("Arweak")
+        .run(|_, event| {
+            if let tauri::RunEvent::Exit = event {
+                monitor::kill_all();
+            }
+        });
 }
