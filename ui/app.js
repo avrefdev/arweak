@@ -44,7 +44,7 @@ function gauge(el, label, value, unit) {
   const ring = el.querySelector(".val");
   ring.style.strokeDashoffset = 213.6 * (1 - (v ?? 0) / 100);
   ring.style.stroke = v != null && v > 85 ? "var(--wr)" : "var(--ac)";
-  el.querySelector(".num").innerHTML = v == null ? "—" : `${v}<small>${unit}</small>`;
+  el.querySelector(".num").innerHTML = v == null ? "-" : `${v}<small>${unit}</small>`;
 }
 
 function chart(svg, values) {
@@ -85,7 +85,7 @@ function animateScore(target) {
 
 function setText(id, v) {
   const el = $(id);
-  const s = v == null ? "—" : String(v);
+  const s = v == null ? "-" : String(v);
   if (el.textContent !== s) el.textContent = s;
 }
 
@@ -99,6 +99,7 @@ function render() {
   $("boost-title").textContent = s.boost ? `${s.active} optimizasyon aktif` : "Optimize edilmedi";
   $("boost-sub").textContent = s.reboot ? "Bazı ayarlar için yeniden başlatın" : s.boost && s.game.running ? `${s.game.name} algılandı` : "";
   $("hdr").textContent = s.boost ? "BOOST AKTİF" : "HAZIR";
+  $("hdr").classList.toggle("ac", s.boost);
 
   if (s.game.img !== lastImg) {
     const img = $("hero-img");
@@ -111,7 +112,8 @@ function render() {
     lastImg = s.game.img;
   }
   setText("hero-name", s.game.name);
-  $("hero-tag").innerHTML = s.game.running ? '<span class="live-dot"></span>ŞU AN OYNANIYOR' : "SEÇİLİ PROFİL";
+  $("hero-tag").textContent = s.game.running ? "ŞU AN OYNANIYOR" : "SEÇİLİ PROFİL";
+  $("hero-tag").classList.toggle("on", s.game.running);
   setText("hero-fps", s.fps);
   $("hero-fps").style.color = s.boost && s.fps ? "var(--ac)" : "#fff";
 
@@ -268,7 +270,7 @@ document.querySelectorAll("[data-set]").forEach((t) =>
 );
 $("restore").addEventListener("click", async () => {
   const b = $("restore");
-  b.textContent = "Oluşturuluyor…";
+  b.textContent = "Oluşturuluyor";
   const ok = await invoke("restore_point");
   b.textContent = ok ? "Oluşturuldu" : "Oluşturulamadı";
   setTimeout(() => (b.textContent = "Oluştur"), 3000);
@@ -284,7 +286,7 @@ $("revert").addEventListener("click", async () => {
     return;
   }
   delete b.dataset.confirm;
-  b.textContent = "Geri alınıyor…";
+  b.textContent = "Geri alınıyor";
   await invoke("revert_everything");
   b.textContent = "Geri alındı";
   setTimeout(() => (b.textContent = "Geri al"), 2500);

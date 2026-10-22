@@ -58,7 +58,7 @@ fn power_plan() -> String {
     out.rsplit_once('(')
         .and_then(|(_, r)| r.split_once(')'))
         .map(|(n, _)| n.trim().to_string())
-        .unwrap_or_else(|| "—".into())
+        .unwrap_or_else(|| "-".into())
 }
 
 fn reg_on(key: &str, name: &str, on: &str) -> Option<bool> {
@@ -89,7 +89,7 @@ pub fn read() -> System {
         ],
         memory: vec![
             row("Kanal", if dual { "Çift kanal".into() } else { "Tek kanal".into() }, if dual { "ok" } else { "err" }),
-            row("Hız", if rated > 0 { format!("{actual} / {rated}") } else { "—".into() }, if expo { "ok" } else { "warn" }),
+            row("Hız", if rated > 0 { format!("{actual} / {rated}") } else { "-".into() }, if expo { "ok" } else { "warn" }),
             row("EXPO / XMP", if expo { "Açık".into() } else { "Kapalı".into() }, if expo { "ok" } else { "warn" }),
             row("Boş bellek", format!("{free:.1} GB").replace('.', ","), "plain"),
         ],

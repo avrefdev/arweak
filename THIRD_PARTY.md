@@ -12,4 +12,4 @@ PresentMon SHA-256: `b2a706bc6ad475749e3b7e3409263aa1e6906d45bdcf993f6dbc0f66018
 
 ## Oyun görselleri
 
-`ui/img/` klasöründeki oyun görselleri ve isimleri ilgili şirketlerin (Epic Games, Riot Games, Valve, Electronic Arts, Mojang/Microsoft, Rockstar Games, Psyonix) ticari markası ve mülküdür. Yalnızca oyunu tanımlamak amacıyla kullanılmaktadır; Arweak bu şirketlerle bağlantılı değildir.
+`ui/img/` klasöründeki oyun görselleri ve isimleri ilgili şirketlerin (Epic Games, Riot Games, Valve, Electronic Arts, Mojang/Microsoft, Rockstar Games, Psyonix) ticari markası ve mülküdür. Sadece oyunu tanımlamak için kullanılır. Arweak bu şirketlerle bağlantılı değildir.
